@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:foodie/components/details_component.dart';
 import 'package:foodie/constants/color_constant.dart';
 import 'package:foodie/screens/screens.dart';
+import 'package:foodie/service/vendor_value.dart';
 
 class VendorProfileScreen extends StatefulWidget {
-  const VendorProfileScreen({super.key});
-
   @override
   State<VendorProfileScreen> createState() => _VendorProfileScreenState();
 }
@@ -17,7 +17,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.only(left: 16.0, right: 16, top: 8),
           child: Column(
             children: [
               Row(
@@ -34,9 +34,9 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Restaurant A",
-                        style: TextStyle(
+                      Text(
+                        vendorValue.getRestaurantName(),
+                        style: const TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 18),
                       ),
                       InkWell(
@@ -76,7 +76,15 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
                     ),
                   ],
                 ),
-              )
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              DetailComponent(
+                  label: "Location", detail: vendorValue.getLocation()),
+              DetailComponent(label: "Mall", detail: vendorValue.getMall()),
+              DetailComponent(
+                  label: "Unit Number", detail: vendorValue.getUnitNum()),
             ],
           ),
         ),

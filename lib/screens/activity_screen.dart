@@ -30,7 +30,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
       height: MediaQuery.of(context).size.height - 165,
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(

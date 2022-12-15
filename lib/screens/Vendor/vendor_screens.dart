@@ -4,7 +4,6 @@ import 'package:foodie/screens/Vendor/vendor_home_screen.dart';
 import 'package:foodie/screens/Vendor/vendor_menu_screen.dart';
 import 'package:foodie/screens/Vendor/vendor_order_screen.dart';
 import 'package:foodie/screens/Vendor/vendor_profile_screen.dart';
-import 'package:foodie/screens/activity_screen.dart';
 
 class VendorScreens extends StatefulWidget {
   const VendorScreens({super.key});
@@ -30,7 +29,7 @@ class _HomeScreenState extends State<VendorScreens> {
                 : isMenu
                     ? const MenuScreen()
                     : isProfile
-                        ? const VendorProfileScreen()
+                        ? VendorProfileScreen()
                         : const OrderScreen(),
             Align(
               alignment: Alignment.bottomCenter,

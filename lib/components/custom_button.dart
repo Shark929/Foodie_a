@@ -6,6 +6,7 @@ class CustomButton extends StatelessWidget {
   final String buttonLabel;
   final double? buttonWidth;
   final double? buttonHeight;
+  final Color? color;
   final Function() buttonFunction;
 
   const CustomButton(
@@ -13,7 +14,8 @@ class CustomButton extends StatelessWidget {
       required this.buttonLabel,
       this.buttonWidth,
       this.buttonHeight,
-      required this.buttonFunction});
+      required this.buttonFunction,
+      this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class CustomButton extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            color: CustomColor().buttonColor,
+            color: color ?? CustomColor().buttonColor,
             borderRadius: BorderRadius.circular(8)),
         width: buttonWidth ?? MediaQuery.of(context).size.width,
         height: 40,

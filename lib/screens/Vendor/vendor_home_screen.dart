@@ -31,6 +31,7 @@ class _VendorHomeScreenState extends State<VendorHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.only(top: 8.0),
       height: MediaQuery.of(context).size.height - 165,
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(

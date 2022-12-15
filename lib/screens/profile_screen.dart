@@ -4,6 +4,7 @@ import 'package:foodie/components/details_component.dart';
 import 'package:foodie/constants/color_constant.dart';
 import 'package:foodie/constants/text_constant.dart';
 import 'package:foodie/screens/Vendor/vendor_screens.dart';
+import 'package:foodie/screens/register_as_vendor_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -20,7 +21,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -84,14 +85,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(
                 height: 16,
               ),
-              Container(
-                alignment: Alignment.center,
-                child: Text(
-                  "Register as a vendor",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: CustomColor().logoColor,
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const RegisterVendorScreen()));
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Register as a vendor",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: CustomColor().logoColor,
+                    ),
                   ),
                 ),
               ),

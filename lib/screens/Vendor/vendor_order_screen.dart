@@ -37,7 +37,7 @@ class _OrderScreenState extends State<OrderScreen> {
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.only(left: 16.0, right: 16, top: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
