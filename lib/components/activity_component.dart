@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
 class ActivityComponent extends StatelessWidget {
-  final String location, time, price;
+  final String foodName, time, totalPrice, dineInCode, orderNum;
 
-  const ActivityComponent(
-      {super.key,
-      required this.location,
-      required this.time,
-      required this.price});
+  const ActivityComponent({
+    super.key,
+    required this.time,
+    required this.totalPrice,
+    required this.foodName,
+    required this.dineInCode,
+    required this.orderNum,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +18,19 @@ class ActivityComponent extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
-          Image.asset(
-            "assets/dish.png",
-            width: 40,
-            height: 40,
-            color: Colors.green,
-          ),
+          dineInCode == "1"
+              ? Image.asset(
+                  "assets/dine-in.png",
+                  width: 40,
+                  height: 40,
+                  color: Colors.green,
+                )
+              : Image.asset(
+                  "assets/take-away.png",
+                  width: 40,
+                  height: 40,
+                  color: Colors.blue,
+                ),
           const SizedBox(
             width: 16,
           ),
@@ -28,8 +38,13 @@ class ActivityComponent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                location,
+                foodName,
                 style: const TextStyle(fontSize: 18),
+              ),
+              Text(
+                "#$orderNum",
+                style: TextStyle(
+                    color: dineInCode == "0" ? Colors.blue : Colors.green),
               ),
               Text(
                 time,
@@ -38,7 +53,10 @@ class ActivityComponent extends StatelessWidget {
             ],
           ),
           const Spacer(),
-          Text(price),
+          Text(
+            "RM $totalPrice",
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          ),
         ],
       ),
     );

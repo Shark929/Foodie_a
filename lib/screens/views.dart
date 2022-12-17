@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodie/screens/login_screen.dart';
-import 'package:foodie/screens/register_screen.dart';
+import 'package:foodie/screens/choose_role_screen.dart';
 
 class Views extends StatefulWidget {
   const Views({super.key});
@@ -24,7 +24,7 @@ class _ViewsState extends State<Views> {
         body: SafeArea(
             child: isSignIn == true
                 ? const LoginScreen()
-                : const RegisterScreen()),
+                : const ChooseRoleScreen()),
       ),
     );
   }

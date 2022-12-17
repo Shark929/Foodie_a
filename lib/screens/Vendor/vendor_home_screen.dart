@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:foodie/constants/color_constant.dart';
 import 'package:foodie/constants/text_constant.dart';
 
 class VendorHomeScreen extends StatefulWidget {
-  const VendorHomeScreen({super.key});
+  final String email;
+
+  const VendorHomeScreen({super.key, required this.email});
 
   @override
   State<VendorHomeScreen> createState() => _VendorHomeScreenState();
@@ -11,23 +13,12 @@ class VendorHomeScreen extends StatefulWidget {
 
 class _VendorHomeScreenState extends State<VendorHomeScreen> {
   double size = 80;
-  List orderList = [
-    {
-      "food_name": "Garlic Chicken",
-      "order_number": "11234",
-      "image": "assets/chicken.jpg"
-    },
-    {
-      "food_name": "Garlic Chicken",
-      "order_number": "11235",
-      "image": "assets/chicken.jpg"
-    },
-    {
-      "food_name": "Mee Goreng Mamak",
-      "order_number": "11236",
-      "image": "assets/meeMamak.jpg"
-    },
-  ];
+  bool activeOrder = false;
+  bool newOrder = true;
+  bool completedOrder = false;
+  CollectionReference orderRef = FirebaseFirestore.instance.collection("Order");
+  CollectionReference restaurantRef =
+      FirebaseFirestore.instance.collection("Restaurant");
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -54,21 +45,41 @@ class _VendorHomeScreenState extends State<VendorHomeScreen> {
                     width: size,
                     height: size,
                     decoration: BoxDecoration(
-                      color: Colors.grey,
+                      color: Colors.red,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          orderList.length.toString(),
-                          style: TextStyle(fontSize: 24),
-                        ),
-                        SizedBox(
+                        StreamBuilder(
+                            stream: orderRef.snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                int counter = 0;
+                                for (int i = 0;
+                                    i < snapshot.data!.docs.length;
+                                    i++) {
+                                  if (snapshot.data!.docs[i]['code'] == "1" &&
+                                      snapshot.data!.docs[i]['vendor_email'] ==
+                                          widget.email) {
+                                    counter++;
+                                  }
+                                }
+                                return Text(
+                                  counter.toString(),
+                                  style: const TextStyle(fontSize: 36),
+                                );
+                              }
+                              return const Text(
+                                "0",
+                                style: TextStyle(fontSize: 36),
+                              );
+                            }),
+                        const SizedBox(
                           height: 8,
                         ),
-                        Text(
-                          "To Prepare",
+                        const Text(
+                          "New",
                           style: TextStyle(fontSize: 12),
                         ),
                       ],
@@ -78,45 +89,85 @@ class _VendorHomeScreenState extends State<VendorHomeScreen> {
                     width: size,
                     height: size,
                     decoration: BoxDecoration(
-                      color: Colors.grey,
+                      color: Colors.blue,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text(
-                          "0",
-                          style: TextStyle(fontSize: 24),
-                        ),
-                        SizedBox(
+                      children: [
+                        StreamBuilder(
+                            stream: orderRef.snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                int counter = 0;
+                                for (int i = 0;
+                                    i < snapshot.data!.docs.length;
+                                    i++) {
+                                  if (snapshot.data!.docs[i]['code'] == "2" &&
+                                      snapshot.data!.docs[i]['vendor_email'] ==
+                                          widget.email) {
+                                    counter++;
+                                  }
+                                }
+                                return Text(
+                                  counter.toString(),
+                                  style: const TextStyle(fontSize: 36),
+                                );
+                              }
+                              return const Text(
+                                "0",
+                                style: TextStyle(fontSize: 36),
+                              );
+                            }),
+                        const SizedBox(
                           height: 8,
                         ),
-                        Text(
+                        const Text(
+                          "Active",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: size,
+                    height: size,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        StreamBuilder(
+                            stream: orderRef.snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                int counter = 0;
+                                for (int i = 0;
+                                    i < snapshot.data!.docs.length;
+                                    i++) {
+                                  if (snapshot.data!.docs[i]['code'] == "3" &&
+                                      snapshot.data!.docs[i]['vendor_email'] ==
+                                          widget.email) {
+                                    counter++;
+                                  }
+                                }
+                                return Text(
+                                  counter.toString(),
+                                  style: const TextStyle(fontSize: 36),
+                                );
+                              }
+                              return const Text(
+                                "0",
+                                style: TextStyle(fontSize: 36),
+                              );
+                            }),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        const Text(
                           "Completed",
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: size,
-                    height: size,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text(
-                          "0",
-                          style: TextStyle(fontSize: 24),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          "Review",
                           style: TextStyle(fontSize: 12),
                         ),
                       ],
@@ -131,65 +182,144 @@ class _VendorHomeScreenState extends State<VendorHomeScreen> {
                 "Order",
                 style: CustomFont().pageLabel,
               ),
-              Container(
-                height: MediaQuery.of(context).size.height - 350,
-                child: ListView.builder(
-                    itemCount: orderList.length,
-                    itemBuilder: (context, index) {
-                      return Row(
-                        children: [
-                          Image.asset(
-                            orderList[index]['image'],
-                            fit: BoxFit.contain,
-                            height: 80,
-                            width: 100,
-                          ),
-                          const SizedBox(
-                            width: 16,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                orderList[index]['food_name'],
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 16,
-                              ),
-                              Text(
-                                "# ${orderList[index]['order_number']}",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          InkWell(
-                            onTap: () {},
-                            child: Container(
-                              width: 80,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: CustomColor().focusColor,
-                              ),
-                              alignment: Alignment.center,
-                              child: const Text(
-                                "Complete",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      );
-                    }),
+              const SizedBox(
+                height: 16,
               ),
+              Container(
+                  height: MediaQuery.of(context).size.height - 350,
+                  child: StreamBuilder(
+                    stream: orderRef.snapshots(),
+                    builder: (context, orderSnapshot) {
+                      if (orderSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      if (orderSnapshot.hasData) {
+                        if (orderSnapshot.hasData) {
+                          return ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: orderSnapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                if (orderSnapshot.data!.docs[index]
+                                            ['vendor_email'] ==
+                                        widget.email &&
+                                    orderSnapshot.data!.docs[index]['code'] ==
+                                        "1") {
+                                  return Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8),
+                                    child: Row(children: [
+                                      Container(
+                                        height: 80,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          image: DecorationImage(
+                                              image: NetworkImage(orderSnapshot
+                                                  .data!.docs[index]['image']),
+                                              fit: BoxFit.fill),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 16,
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text(
+                                            orderSnapshot.data!.docs[index]
+                                                ['food_name'],
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          const SizedBox(
+                                            height: 30,
+                                          ),
+                                          Text(
+                                              "# ${orderSnapshot.data!.docs[index]['order_number']}"),
+                                        ],
+                                      ),
+                                      const Spacer(),
+                                      newOrder == true
+                                          ? InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  newOrder = false;
+                                                  activeOrder = true;
+                                                  completedOrder = false;
+                                                  orderSnapshot.data!
+                                                      .docs[index].reference
+                                                      .update({"code": "2"});
+                                                });
+                                              },
+                                              child: Container(
+                                                  width: 100,
+                                                  alignment: Alignment.center,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.red,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8)),
+                                                  child: const Text("New")),
+                                            )
+                                          : activeOrder == true
+                                              ? InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      newOrder = false;
+                                                      activeOrder = false;
+                                                      completedOrder = true;
+                                                      orderSnapshot.data!
+                                                          .docs[index].reference
+                                                          .update(
+                                                              {"code": "3"});
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                      width: 100,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.blue,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8)),
+                                                      child:
+                                                          const Text("Active")),
+                                                )
+                                              : InkWell(
+                                                  onTap: () {
+                                                    setState(() {});
+                                                  },
+                                                  child: Container(
+                                                      width: 100,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.green,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8)),
+                                                      child: const Text(
+                                                          "Completed")),
+                                                )
+                                    ]),
+                                  );
+                                }
+                                return const SizedBox();
+                              });
+                        }
+                        return const Text("No data available at the moment");
+                      }
+                      return const SizedBox();
+                    },
+                  )),
             ],
           ),
         ),

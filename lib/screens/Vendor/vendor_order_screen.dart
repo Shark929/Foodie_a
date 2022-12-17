@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:foodie/components/order_component.dart';
 import 'package:foodie/constants/text_constant.dart';
@@ -10,26 +11,7 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  List orderList = [
-    {
-      "food_name": "Garlic Chicken",
-      "order_number": "98712",
-      "total_price": "RM46.00",
-      "order_code": 1,
-    },
-    {
-      "food_name": "Garlic Chicken",
-      "order_number": "98712",
-      "total_price": "RM46.00",
-      "order_code": 2,
-    },
-    {
-      "food_name": "Garlic Chicken",
-      "order_number": "98712",
-      "total_price": "RM46.00",
-      "order_code": 1,
-    },
-  ];
+  CollectionReference orderRed = FirebaseFirestore.instance.collection("Order");
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -56,19 +38,41 @@ class _OrderScreenState extends State<OrderScreen> {
                 height: 16,
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height - 200,
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: orderList.length,
-                    itemBuilder: (context, index) {
-                      return OrderComponent(
-                        orderCode: orderList[index]['order_code'],
-                        foodName: orderList[index]['food_name'],
-                        orderNumber: orderList[index]['order_number'],
-                        price: orderList[index]['total_price'],
-                      );
-                    }),
-              ),
+                  height: MediaQuery.of(context).size.height - 200,
+                  child: StreamBuilder<QuerySnapshot>(
+                      stream: orderRed.snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                if (snapshot.data!.docs[index]['code'] == "3") {
+                                  return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16.0),
+                                      child: OrderComponent(
+                                        foodName: snapshot.data!.docs[index]
+                                            ['food_name'],
+                                        dineIn: snapshot.data!.docs[index]
+                                            ['dine_in'],
+                                        orderNumber: snapshot.data!.docs[index]
+                                            ['order_number'],
+                                        price: snapshot.data!.docs[index]
+                                            ['price'],
+                                      ));
+                                }
+                                return const SizedBox();
+                              });
+                        }
+                        return const Text("No data available at the moment");
+                      })),
             ],
           ),
         ),

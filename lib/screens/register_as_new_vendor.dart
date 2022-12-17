@@ -1,45 +1,28 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:foodie/components/custom_button.dart';
 import 'package:foodie/components/input_field.dart';
-import 'package:foodie/components/loading_component.dart';
 import 'package:foodie/components/logo.dart';
 import 'package:foodie/constants/color_constant.dart';
 import 'package:foodie/constants/text_constant.dart';
+import 'package:foodie/screens/Vendor/vendor_approval_screen.dart';
 import 'package:foodie/screens/login_screen.dart';
-import 'package:foodie/screens/screens.dart';
-import 'package:foodie/service/user_value.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class RegisterNewVendorScreen extends StatefulWidget {
+  const RegisterNewVendorScreen({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<RegisterNewVendorScreen> createState() =>
+      _RegisterNewVendorScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
-  TextEditingController userNameController = TextEditingController();
+class _RegisterNewVendorScreenState extends State<RegisterNewVendorScreen> {
   TextEditingController userEmailController = TextEditingController();
+  TextEditingController restaurantController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
+  TextEditingController mallController = TextEditingController();
+  TextEditingController unitNoController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController phoneNumController = TextEditingController();
-  late Timer timer;
-  bool isRegistered = false;
-
-  animateProgressIndicator() {
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      setState(() {
-        isRegistered = true;
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    timer.cancel();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +36,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(
                 height: 50,
               ),
-              const AppLogo(),
+              const AppLogo(
+                logo: "assets/vendor.png",
+              ),
               const SizedBox(
                 height: 30,
               ),
@@ -61,48 +46,63 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 "Register Now",
                 style: CustomFont().pageLabel,
               ),
-              const SizedBox(
-                height: 30,
-              ),
-              InputField(
-                controller: userNameController,
-                labelIcon: const Icon(Icons.account_circle),
-                hintText: "Username",
-              ),
               InputField(
                 controller: userEmailController,
                 labelIcon: const Icon(Icons.email),
                 hintText: "Email",
               ),
               InputField(
-                controller: phoneNumController,
-                labelIcon: const Icon(Icons.phone),
-                hintText: "Phone Number",
-              ),
-              InputField(
                 obscureText: true,
                 controller: passwordController,
-                labelIcon: const Icon(Icons.key),
+                labelIcon: const Icon(Icons.store_mall_directory),
                 hintText: "Password",
+              ),
+              InputField(
+                controller: restaurantController,
+                labelIcon: const Icon(Icons.account_circle),
+                hintText: "Restaurant",
+              ),
+              InputField(
+                controller: locationController,
+                labelIcon: const Icon(Icons.location_city),
+                hintText: "Location",
+              ),
+              InputField(
+                controller: mallController,
+                labelIcon: const Icon(Icons.local_mall),
+                hintText: "Mall",
+              ),
+              InputField(
+                controller: unitNoController,
+                labelIcon: const Icon(Icons.store_mall_directory),
+                hintText: "Unit No",
               ),
               const SizedBox(
                 height: 30,
               ),
               CustomButton(
                   buttonFunction: () async {
-                    FirebaseFirestore.instance.collection("Users").add({
-                      "user_name": userNameController.text,
-                      "user_email": userEmailController.text,
-                      "phone_number": phoneNumController.text,
-                      "password": passwordController.text,
+                    FirebaseFirestore.instance
+                        .collection("Vendor_details")
+                        .add({
+                      "bio": "",
+                      "description": "",
+                      "email": userEmailController.text,
+                    });
+                    FirebaseFirestore.instance.collection("New_Vendor").add({
+                      "restaurant": restaurantController.text,
+                      "location": locationController.text,
+                      "mall": mallController.text,
+                      "unit_no": unitNoController.text,
                       "code": 1,
+                      "email": userEmailController.text,
+                      "password": passwordController.text,
                     }).then((value) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Screens(
-                                    userEmail: userEmailController.text,
-                                  )));
+                              builder: (context) =>
+                                  const VendorApprovalScreen()));
                     }).catchError((err) => print("Failed to add new data"));
                   },
                   buttonLabel: "Register"),
@@ -129,6 +129,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         style: TextStyle(color: CustomColor().buttonColor),
                       )),
                 ],
+              ),
+              const SizedBox(
+                height: 150,
               ),
             ],
           ),

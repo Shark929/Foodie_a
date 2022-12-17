@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:foodie/constants/color_constant.dart';
 
 class AppLogo extends StatelessWidget {
-  const AppLogo({super.key});
+  final String? logo;
+  const AppLogo({super.key, this.logo});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class AppLogo extends StatelessWidget {
           color: CustomColor().logoColor),
       alignment: Alignment.center,
       child: Image.asset(
-        "assets/fork.png",
+        logo ?? "assets/fork.png",
         width: 100.0,
       ),
     );

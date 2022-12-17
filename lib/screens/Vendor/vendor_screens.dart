@@ -6,7 +6,15 @@ import 'package:foodie/screens/Vendor/vendor_order_screen.dart';
 import 'package:foodie/screens/Vendor/vendor_profile_screen.dart';
 
 class VendorScreens extends StatefulWidget {
-  const VendorScreens({super.key});
+  final String restaurantName, location, mall, unitNum, email;
+
+  const VendorScreens(
+      {super.key,
+      required this.restaurantName,
+      required this.location,
+      required this.mall,
+      required this.unitNum,
+      required this.email});
 
   @override
   State<VendorScreens> createState() => _HomeScreenState();
@@ -19,18 +27,34 @@ class _HomeScreenState extends State<VendorScreens> {
   bool isOrder = false;
   @override
   Widget build(BuildContext context) {
+    print(widget.email);
     return Scaffold(
       body: SafeArea(
         child: Stack(
           children: [
             //screens go here
             isHome
-                ? const VendorHomeScreen()
+                ? VendorHomeScreen(
+                    email: widget.email,
+                  )
                 : isMenu
-                    ? const MenuScreen()
+                    ? MenuScreen(
+                        location: widget.location,
+                        email: widget.email,
+                        mall: widget.mall,
+                      )
                     : isProfile
-                        ? VendorProfileScreen()
+                        ? VendorProfileScreen(
+                            location: widget.location,
+                            mall: widget.mall,
+                            unitNum: widget.unitNum,
+                            restaurantName: widget.restaurantName,
+                            email: widget.email,
+                          )
                         : const OrderScreen(),
+
+            //snav bar go here
+
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -94,7 +118,7 @@ class _HomeScreenState extends State<VendorScreens> {
                         });
                       },
                       child: Image.asset(
-                        "assets/user.png",
+                        "assets/vendor.png",
                         height: 30,
                         color:
                             isProfile ? CustomColor().logoColor : Colors.black,

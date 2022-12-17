@@ -15,7 +15,6 @@
     the `--base-href` argument provided to `flutter build`.
   -->
   <base href="$FLUTTER_BASE_HREF">
-
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
@@ -54,6 +53,19 @@
         }
       });
     });
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyB7AeBeW_iY2dlCi26BHsGTmTexHlpSGz0",
+      projectId: "foodie-890a6",
+      storageBucket: "foodie-890a6.appspot.com",
+      messagingSenderId: "",
+      appId: "1:129023323331:android:338f2802029a23d8edc676"
+    };
+  
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
   </script>
 </body>
 </html>

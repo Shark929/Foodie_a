@@ -5,25 +5,25 @@ import 'package:foodie/components/input_field.dart';
 import 'package:foodie/components/logo.dart';
 import 'package:foodie/constants/color_constant.dart';
 import 'package:foodie/constants/text_constant.dart';
+import 'package:foodie/screens/Vendor/vendor_screens.dart';
 import 'package:foodie/screens/choose_role_screen.dart';
-import 'package:foodie/screens/screens.dart';
-import 'package:foodie/screens/register_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class VendorLoginScreen extends StatefulWidget {
+  const VendorLoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<VendorLoginScreen> createState() => _VendorLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _VendorLoginScreenState extends State<VendorLoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  CollectionReference userRefs = FirebaseFirestore.instance.collection("Users");
+  CollectionReference vendorRefs =
+      FirebaseFirestore.instance.collection("Vendor");
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: userRefs.snapshots(),
+        stream: vendorRefs.snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 30,
                         ),
                         Text(
-                          "Login Now",
+                          "Vendor Login",
                           style: CustomFont().pageLabel,
                         ),
                         const SizedBox(
@@ -66,20 +66,24 @@ class _LoginScreenState extends State<LoginScreen> {
                               for (int i = 0;
                                   i < snapshot.data!.docs.length;
                                   i++) {
-                                if (snapshot.data!.docs[i]['user_email'] ==
+                                if (snapshot.data!.docs[i]['email'] ==
                                         emailController.text &&
                                     snapshot.data!.docs[i]['password'] ==
                                         passwordController.text) {
                                   Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Screens(
-                                        userEmail: snapshot
-                                            .data!.docs[i]['user_email']
-                                            .toString(),
-                                      ),
-                                    ),
-                                  );
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => VendorScreens(
+                                              restaurantName: snapshot
+                                                  .data!.docs[i]['restaurant'],
+                                              location: snapshot.data!.docs[i]
+                                                  ['location'],
+                                              mall: snapshot.data!.docs[i]
+                                                  ['mall'],
+                                              unitNum: snapshot.data!.docs[i]
+                                                  ['unit_no'],
+                                              email: snapshot.data!.docs[i]
+                                                  ['email'])));
                                 }
                               }
                             },

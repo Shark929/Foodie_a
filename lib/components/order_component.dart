@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
 class OrderComponent extends StatelessWidget {
-  final String foodName, orderNumber, price;
-  final int orderCode;
+  final String foodName, orderNumber, price, dineIn;
   const OrderComponent(
       {super.key,
       required this.foodName,
       required this.orderNumber,
       required this.price,
-      required this.orderCode});
+      required this.dineIn});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +16,7 @@ class OrderComponent extends StatelessWidget {
       child: Row(
         children: [
           Image.asset(
-            orderCode == 1 ? "assets/dine-in.png" : "assets/take-away.png",
+            dineIn == "1" ? "assets/dine-in.png" : "assets/take-away.png",
             width: 40,
             height: 30,
             color: Colors.green,
@@ -34,12 +33,15 @@ class OrderComponent extends StatelessWidget {
               ),
               Text(
                 orderNumber,
-                style: const TextStyle(color: Colors.grey),
+                style: const TextStyle(color: Colors.grey, fontSize: 16),
               ),
             ],
           ),
           const Spacer(),
-          Text(price),
+          Text(
+            "RM $price",
+            style: TextStyle(fontSize: 18),
+          ),
         ],
       ),
     );
