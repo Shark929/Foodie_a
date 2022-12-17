@@ -28,10 +28,8 @@ class _HomeScreenState extends State<Screens> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference cartRef =
-        FirebaseFirestore.instance.collection(widget.userEmail);
-
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Stack(
           children: [
@@ -100,7 +98,9 @@ class _HomeScreenState extends State<Screens> {
                           });
                         },
                         child: StreamBuilder<QuerySnapshot>(
-                          stream: cartRef.snapshots(),
+                          stream: FirebaseFirestore.instance
+                              .collection(widget.userEmail)
+                              .snapshots(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               return Stack(

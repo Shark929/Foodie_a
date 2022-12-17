@@ -212,6 +212,11 @@ class _UserWalletScreenState extends State<UserWalletScreen> {
                                           "1"
                                       ? "assets/dish.png"
                                       : "assets/top-up.png",
+                                  color: snapshot.data!.docs[index]
+                                              ['payment_code'] ==
+                                          "1"
+                                      ? Colors.green
+                                      : Colors.blue,
                                   width: 40,
                                   height: 40,
                                 ),
@@ -232,10 +237,19 @@ class _UserWalletScreenState extends State<UserWalletScreen> {
                                 ),
                                 const Spacer(),
                                 Text(
-                                    "RM ${snapshot.data!.docs[index]['amount']}"),
+                                  "RM ${snapshot.data!.docs[index]['amount']}",
+                                  style: TextStyle(
+                                    color: snapshot.data!.docs[index]
+                                                ['payment_code'] ==
+                                            "1"
+                                        ? Colors.green
+                                        : Colors.blue,
+                                  ),
+                                ),
                               ]),
                             );
                           }
+                          return const SizedBox();
                         });
                   }
                   return const SizedBox();

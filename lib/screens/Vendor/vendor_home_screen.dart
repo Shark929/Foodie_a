@@ -13,9 +13,7 @@ class VendorHomeScreen extends StatefulWidget {
 
 class _VendorHomeScreenState extends State<VendorHomeScreen> {
   double size = 80;
-  bool activeOrder = false;
-  bool newOrder = true;
-  bool completedOrder = false;
+
   CollectionReference orderRef = FirebaseFirestore.instance.collection("Order");
   CollectionReference restaurantRef =
       FirebaseFirestore.instance.collection("Restaurant");
@@ -205,8 +203,8 @@ class _VendorHomeScreenState extends State<VendorHomeScreen> {
                                 if (orderSnapshot.data!.docs[index]
                                             ['vendor_email'] ==
                                         widget.email &&
-                                    orderSnapshot.data!.docs[index]['code'] ==
-                                        "1") {
+                                    orderSnapshot.data!.docs[index]['code'] !=
+                                        "3") {
                                   return Container(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8),
@@ -227,6 +225,8 @@ class _VendorHomeScreenState extends State<VendorHomeScreen> {
                                         width: 16,
                                       ),
                                       Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             orderSnapshot.data!.docs[index]
@@ -243,13 +243,11 @@ class _VendorHomeScreenState extends State<VendorHomeScreen> {
                                         ],
                                       ),
                                       const Spacer(),
-                                      newOrder == true
+                                      orderSnapshot.data!.docs[index]['code'] ==
+                                              "1"
                                           ? InkWell(
                                               onTap: () {
                                                 setState(() {
-                                                  newOrder = false;
-                                                  activeOrder = true;
-                                                  completedOrder = false;
                                                   orderSnapshot.data!
                                                       .docs[index].reference
                                                       .update({"code": "2"});
@@ -266,13 +264,12 @@ class _VendorHomeScreenState extends State<VendorHomeScreen> {
                                                               8)),
                                                   child: const Text("New")),
                                             )
-                                          : activeOrder == true
+                                          : orderSnapshot.data!.docs[index]
+                                                      ['code'] ==
+                                                  "2"
                                               ? InkWell(
                                                   onTap: () {
                                                     setState(() {
-                                                      newOrder = false;
-                                                      activeOrder = false;
-                                                      completedOrder = true;
                                                       orderSnapshot.data!
                                                           .docs[index].reference
                                                           .update(

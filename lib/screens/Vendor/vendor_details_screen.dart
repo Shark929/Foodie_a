@@ -5,7 +5,7 @@ import 'package:foodie/components/details_component.dart';
 import 'package:foodie/components/input_field.dart';
 import 'package:foodie/components/vertical_details_component.dart';
 import 'package:foodie/constants/color_constant.dart';
-import 'package:foodie/screens/Vendor/wallet_screen.dart';
+import 'package:foodie/screens/Vendor/vendor_wallet_screen.dart';
 import 'package:foodie/screens/choose_role_login_screen.dart';
 
 class VendorDetailsScreen extends StatefulWidget {
@@ -124,7 +124,7 @@ class _VendorDetailsScreenState extends State<VendorDetailsScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      WalletScreen(email: widget.email)));
+                                      VendorWalletScreen(email: widget.email)));
                         },
                         child: Image.asset(
                           "assets/wallet.png",

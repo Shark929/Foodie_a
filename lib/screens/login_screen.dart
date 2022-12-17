@@ -82,6 +82,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   );
                                 }
                               }
+
+                              setState(() {
+                                emailController.clear();
+                                passwordController.clear();
+                              });
                             },
                             buttonLabel: "Login"),
                         const SizedBox(

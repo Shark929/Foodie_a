@@ -62,8 +62,9 @@ class _OrderScreenState extends State<OrderScreen> {
                                             ['food_name'],
                                         dineIn: snapshot.data!.docs[index]
                                             ['dine_in'],
-                                        orderNumber: snapshot.data!.docs[index]
-                                            ['order_number'],
+                                        orderNumber: snapshot
+                                            .data!.docs[index]['order_number']
+                                            .toString(),
                                         price: snapshot.data!.docs[index]
                                             ['price'],
                                       ));

@@ -74,15 +74,18 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                                             vendorEmail: snapshot
                                                 .data!.docs[index]['email'])));
                               },
-                              child: MenuComponent(
-                                category: snapshot.data!.docs[index]
-                                    ['food_category'],
-                                code: snapshot.data!.docs[index]['food_code'],
-                                color: Colors.white,
-                                foodName: snapshot.data!.docs[index]
-                                    ['food_name'],
-                                image: snapshot.data!.docs[index]['image'],
-                                price: snapshot.data!.docs[index]['price'],
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: MenuComponent(
+                                  category: snapshot.data!.docs[index]
+                                      ['food_category'],
+                                  code: snapshot.data!.docs[index]['food_code'],
+                                  color: Colors.white,
+                                  foodName: snapshot.data!.docs[index]
+                                      ['food_name'],
+                                  image: snapshot.data!.docs[index]['image'],
+                                  price: snapshot.data!.docs[index]['price'],
+                                ),
                               ),
                             );
                           }

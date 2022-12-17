@@ -1,12 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:foodie/components/search_component.dart';
-import 'package:foodie/components/search_input.dart';
 import 'package:foodie/components/trending_component.dart';
 import 'package:foodie/constants/text_constant.dart';
-import 'package:foodie/screens/cart_screen.dart';
 import 'package:foodie/screens/location_screen.dart';
-import 'package:foodie/screens/mall_screen.dart';
 import 'package:foodie/screens/user_order_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,26 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String location = "";
   bool searchIsPressed = false;
   TextEditingController searchController = TextEditingController();
-  List<Map<String, dynamic>> locationData = [
-    {
-      "location_id": "1",
-      "location": "Bukit Bintang",
-      "image":
-          "https://i.picsum.photos/id/10/2500/1667.jpg?hmac=J04WWC_ebchx3WwzbM-Z4_KC_LeLBWr5LZMaAkWkF68"
-    },
-    {
-      "location_id": "2",
-      "location": "Bukit Nenas",
-      "image":
-          "https://i.picsum.photos/id/13/2500/1667.jpg?hmac=SoX9UoHhN8HyklRA4A3vcCWJMVtiBXUg0W4ljWTor7s"
-    },
-    {
-      "location_id": "3",
-      "location": "Kota Damansara",
-      "image":
-          "https://i.picsum.photos/id/15/2500/1667.jpg?hmac=Lv03D1Y3AsZ9L2tMMC1KQZekBVaQSDc1waqJ54IHvo4"
-    },
-  ];
+
   CollectionReference locationRef =
       FirebaseFirestore.instance.collection("Location");
 
@@ -107,6 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   location == ""
                       ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(
                               height: 32,

@@ -143,7 +143,7 @@ class _CartScreenState extends State<CartScreen> {
                                               child: Column(
                                                 children: [
                                                   dineInLoading == true
-                                                      ? CircularProgressIndicator()
+                                                      ? const CircularProgressIndicator()
                                                       : Container(
                                                           height: 100,
                                                           width: 100,
@@ -292,11 +292,8 @@ class _CartScreenState extends State<CartScreen> {
                                     )
                             ],
                           );
-                        } else {
-                          return Center(
-                            child: Image.asset("assets/shopping-bag.png"),
-                          );
                         }
+                        return const SizedBox();
                       }),
                 ],
               ),

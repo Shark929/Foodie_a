@@ -90,6 +90,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               CustomButton(
                   buttonFunction: () async {
+                    FirebaseFirestore.instance.collection("MyWallet").add({
+                      "balance": "0",
+                      "user_email": userEmailController.text,
+                    });
                     FirebaseFirestore.instance.collection("Users").add({
                       "user_name": userNameController.text,
                       "user_email": userEmailController.text,
@@ -104,6 +108,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     userEmail: userEmailController.text,
                                   )));
                     }).catchError((err) => print("Failed to add new data"));
+
+                    setState(() {
+                      userNameController.clear();
+                      userEmailController.clear();
+                      phoneNumController.clear();
+                      passwordController.clear();
+                    });
                   },
                   buttonLabel: "Register"),
               const SizedBox(

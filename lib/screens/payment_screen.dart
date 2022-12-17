@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:foodie/constants/text_constant.dart';
+import 'package:foodie/screens/receipt_screen.dart';
 import 'package:foodie/screens/screens.dart';
 import 'package:foodie/screens/user_wallet_screen.dart';
 import 'package:intl/intl.dart';
@@ -128,7 +129,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         myBalance = snapshot.data!.docs[i]['balance'];
                       }
                     }
-
+                    print("My balance: ${myBalance}");
                     return StreamBuilder(
                         stream: FirebaseFirestore.instance
                             .collection(widget.userEmail)
@@ -160,7 +161,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   String actualDate = formatterDate.format(now);
                                   String actualTime = formatterTime.format(now);
                                   Random random = new Random();
-                                  int randomNumber = random.nextInt(100);
+                                  int randomNumber = random.nextInt(1000);
                                   FirebaseFirestore.instance
                                       .collection("Transaction")
                                       .add({
@@ -187,12 +188,25 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     "quantity": widget.quantity,
                                     "total_price": widget.totalPrice,
                                   }).then((value) {
-                                    Navigator.push(
+                                    Navigator.pushAndRemoveUntil(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => Screens(
-                                                  userEmail: widget.userEmail,
-                                                )));
+                                            builder: (context) => ReceiptScreen(
+                                                  orderNum:
+                                                      randomNumber.toString(),
+                                                  vendorEmail:
+                                                      widget.foodVendorEmail,
+                                                  time:
+                                                      "$actualDate $actualTime",
+                                                  dineIn: widget.dineIn,
+                                                  foodName: widget.foodName,
+                                                  email: widget.userEmail,
+                                                  image: widget.foodImage,
+                                                  price: widget.price,
+                                                  totalPrice: widget.totalPrice,
+                                                  quantity: widget.quantity,
+                                                )),
+                                        (route) => false);
                                   });
                                 } else {
                                   showDialog(
