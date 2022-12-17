@@ -22,7 +22,15 @@ class _VendorWalletScreenState extends State<VendorWalletScreen> {
 
   double balance = 0;
   double adminCommission = 0.2;
+  double totalRevenue = 0;
+
   TextEditingController amountController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,6 +59,61 @@ class _VendorWalletScreenState extends State<VendorWalletScreen> {
                           if (snapshot.data!.docs[i]['email'] == widget.email) {
                             balance =
                                 double.parse(snapshot.data!.docs[i]['balance']);
+
+                            if (balance == 0.0) {
+                              return StreamBuilder(
+                                  stream: FirebaseFirestore.instance
+                                      .collection("Order")
+                                      .snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      for (int i = 0;
+                                          i < snapshot.data!.docs.length;
+                                          i++) {
+                                        if (snapshot.data!.docs[i]
+                                                ['vendor_email'] ==
+                                            widget.email) {
+                                          if (snapshot.data!.docs[i]['code'] ==
+                                              "3") {
+                                            balance += double.parse(snapshot
+                                                .data!.docs[i]['total_price']);
+                                          }
+                                          return Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: 100,
+                                            decoration: BoxDecoration(
+                                                color: CustomColor().logoColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                const Text(
+                                                  "Total Balance",
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                Text(
+                                                  "RM ${balance.toStringAsFixed(2)}",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                      fontSize: 24),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }
+                                      }
+                                    }
+                                    return const Text("No data shown");
+                                  });
+                            }
                           }
                         }
 

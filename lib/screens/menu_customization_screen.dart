@@ -87,13 +87,12 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
               ),
               StreamBuilder(
                   stream: categoryRef.snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      for (int i = 0; i < snapshot.data!.docs.length; i++) {
-                        print(snapshot.data!.docs[i]['category_name']);
-                        if (snapshot.data!.docs[i]['category_name'] ==
+                  builder: (context, snapshotC) {
+                    if (snapshotC.hasData) {
+                      for (int i = 0; i < snapshotC.data!.docs.length; i++) {
+                        if (snapshotC.data!.docs[i]['category_name'] ==
                             widget.food_category) {
-                          categoryCode = snapshot.data!.docs[i]['category_id'];
+                          categoryCode = snapshotC.data!.docs[i]['category_id'];
                         }
                       }
                       return StreamBuilder(
@@ -104,62 +103,68 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                                   shrinkWrap: true,
                                   itemCount: snapshot.data!.docs.length,
                                   itemBuilder: (context, index) {
-                                    for (int i = 0;
-                                        i < snapshot.data!.docs.length;
-                                        i++) {
-                                      if (isChosen.isEmpty ||
-                                          isChosen.length <
-                                              snapshot.data!.docs.length) {
-                                        isChosen.add("0");
+                                    if (snapshot.data!.docs[index]
+                                            ['category_id'] ==
+                                        categoryCode) {
+                                      for (int i = 0;
+                                          i < snapshot.data!.docs.length;
+                                          i++) {
+                                        if (isChosen.isEmpty ||
+                                            isChosen.length <
+                                                snapshot.data!.docs.length) {
+                                          isChosen.add("0");
+                                        }
                                       }
-                                    }
 
-                                    return Container(
-                                        margin:
-                                            const EdgeInsets.only(bottom: 8),
-                                        child: Row(
-                                          children: [
-                                            InkWell(
-                                              onTap: () {
-                                                if (isChosen[index] == "0") {
-                                                  setState(() {
-                                                    isChosen[index] = "1";
-                                                  });
-                                                } else {
-                                                  setState(() {
-                                                    isChosen[index] = "0";
-                                                  });
-                                                }
+                                      return Container(
+                                          margin:
+                                              const EdgeInsets.only(bottom: 8),
+                                          child: Row(
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  if (isChosen[index] == "0") {
+                                                    setState(() {
+                                                      isChosen[index] = "1";
+                                                    });
+                                                  } else {
+                                                    setState(() {
+                                                      isChosen[index] = "0";
+                                                    });
+                                                  }
 
-                                                if (isChosen[index] == "1") {
-                                                  foodNameCart =
-                                                      widget.food_name;
-                                                  foodTypeCart = snapshot.data!
-                                                      .docs[index]['type'];
-                                                }
-                                              },
-                                              child: Container(
-                                                width: 20,
-                                                height: 20,
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors.black),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50)),
-                                                child: isChosen[index] == "1"
-                                                    ? Image.asset(
-                                                        "assets/check-mark.png")
-                                                    : Container(),
+                                                  if (isChosen[index] == "1") {
+                                                    foodNameCart =
+                                                        widget.food_name;
+                                                    foodTypeCart = snapshot
+                                                        .data!
+                                                        .docs[index]['type'];
+                                                  }
+                                                },
+                                                child: Container(
+                                                  width: 20,
+                                                  height: 20,
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: Colors.black),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50)),
+                                                  child: isChosen[index] == "1"
+                                                      ? Image.asset(
+                                                          "assets/check-mark.png")
+                                                      : Container(),
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(
-                                              width: 16,
-                                            ),
-                                            Text(snapshot.data!.docs[index]
-                                                ['type']),
-                                          ],
-                                        ));
+                                              const SizedBox(
+                                                width: 16,
+                                              ),
+                                              Text(snapshot.data!.docs[index]
+                                                  ['type']),
+                                            ],
+                                          ));
+                                    }
+                                    return SizedBox();
                                   });
                             }
                             return const SizedBox();
@@ -248,7 +253,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => Screens(
-                                  userEmail: "asd",
+                                  userEmail: widget.userEmail,
                                 )));
                   });
                 },

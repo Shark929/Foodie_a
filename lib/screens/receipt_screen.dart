@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodie/components/custom_button.dart';
 import 'package:foodie/constants/text_constant.dart';
-import 'package:foodie/screens/screens.dart';
 
 class ReceiptScreen extends StatefulWidget {
   final String orderNum,
@@ -14,6 +13,9 @@ class ReceiptScreen extends StatefulWidget {
       price,
       totalPrice,
       quantity;
+  final String? label;
+
+  final Function() buttonFunc;
   const ReceiptScreen(
       {super.key,
       required this.orderNum,
@@ -25,7 +27,9 @@ class ReceiptScreen extends StatefulWidget {
       required this.image,
       required this.price,
       required this.totalPrice,
-      required this.quantity});
+      required this.quantity,
+      required this.buttonFunc,
+      this.label});
 
   @override
   State<ReceiptScreen> createState() => _ReceiptScreenState();
@@ -129,16 +133,8 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                 height: 30,
               ),
               CustomButton(
-                  buttonLabel: "Back to home",
-                  buttonFunction: () {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Screens(
-                                  userEmail: widget.email,
-                                )),
-                        (route) => false);
-                  }),
+                  buttonLabel: widget.label ?? "Back to home",
+                  buttonFunction: widget.buttonFunc),
             ]),
           ),
         ),

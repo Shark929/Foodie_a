@@ -36,7 +36,10 @@ class _MallScreenState extends State<MallScreen> {
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: NetworkImage(widget.image), fit: BoxFit.cover),
+                      image: NetworkImage(widget.image != ""
+                          ? widget.image
+                          : "https://i.picsum.photos/id/57/2448/3264.jpg?hmac=ewraXYesC6HuSEAJsg3Q80bXd1GyJTxekI05Xt9YjfQ"),
+                      fit: BoxFit.cover),
                 ),
               ),
               const SizedBox(

@@ -192,6 +192,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => ReceiptScreen(
+                                                  buttonFunc: () {
+                                                    Navigator
+                                                        .pushAndRemoveUntil(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        Screens(
+                                                                          userEmail:
+                                                                              widget.userEmail,
+                                                                        )),
+                                                            (route) => false);
+                                                  },
                                                   orderNum:
                                                       randomNumber.toString(),
                                                   vendorEmail:

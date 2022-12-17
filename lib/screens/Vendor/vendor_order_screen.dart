@@ -2,9 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:foodie/components/order_component.dart';
 import 'package:foodie/constants/text_constant.dart';
+import 'package:foodie/screens/Vendor/vendor_screens.dart';
+import 'package:foodie/screens/receipt_screen.dart';
 
 class OrderScreen extends StatefulWidget {
-  const OrderScreen({super.key});
+  final String email;
+  const OrderScreen({super.key, required this.email});
 
   @override
   State<OrderScreen> createState() => _OrderScreenState();
@@ -53,20 +56,59 @@ class _OrderScreenState extends State<OrderScreen> {
                               shrinkWrap: true,
                               itemCount: snapshot.data!.docs.length,
                               itemBuilder: (context, index) {
-                                if (snapshot.data!.docs[index]['code'] == "3") {
+                                if (snapshot.data!.docs[index]['code'] == "3" &&
+                                    snapshot.data!.docs[index]
+                                            ['vendor_email'] ==
+                                        widget.email) {
                                   return Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 16.0),
-                                      child: OrderComponent(
-                                        foodName: snapshot.data!.docs[index]
-                                            ['food_name'],
-                                        dineIn: snapshot.data!.docs[index]
-                                            ['dine_in'],
-                                        orderNumber: snapshot
-                                            .data!.docs[index]['order_number']
-                                            .toString(),
-                                        price: snapshot.data!.docs[index]
-                                            ['price'],
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ReceiptScreen(
+                                                          label: "Back",
+                                                          buttonFunc: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          orderNum:
+                                                              snapshot.data!.docs[index]['order_number']
+                                                                  .toString(),
+                                                          vendorEmail: snapshot
+                                                                  .data!
+                                                                  .docs[index]
+                                                              ['vendor_email'],
+                                                          time: snapshot.data!.docs[index]
+                                                              ['time'],
+                                                          dineIn: snapshot.data!
+                                                                  .docs[index]
+                                                              ['dine_in'],
+                                                          foodName: snapshot
+                                                                  .data!
+                                                                  .docs[index]
+                                                              ['food_name'],
+                                                          email: snapshot.data!.docs[index]
+                                                              ['user_email'],
+                                                          image: snapshot.data!.docs[index]['image'],
+                                                          price: snapshot.data!.docs[index]['price'],
+                                                          totalPrice: snapshot.data!.docs[index]['total_price'],
+                                                          quantity: snapshot.data!.docs[index]['quantity'])));
+                                        },
+                                        child: OrderComponent(
+                                          foodName: snapshot.data!.docs[index]
+                                              ['food_name'],
+                                          dineIn: snapshot.data!.docs[index]
+                                              ['dine_in'],
+                                          orderNumber: snapshot
+                                              .data!.docs[index]['order_number']
+                                              .toString(),
+                                          price: snapshot.data!.docs[index]
+                                              ['total_price'],
+                                        ),
                                       ));
                                 }
                                 return const SizedBox();

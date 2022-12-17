@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:foodie/components/activity_component.dart';
 import 'package:foodie/constants/text_constant.dart';
 import 'package:foodie/screens/receipt_screen.dart';
+import 'package:foodie/screens/screens.dart';
 
 class OrderScreen extends StatefulWidget {
   final String userEmail;
@@ -61,11 +62,22 @@ class _OrderScreenState extends State<OrderScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => ReceiptScreen(
+                                            buttonFunc: () {
+                                              Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Screens(
+                                                            userEmail: widget
+                                                                .userEmail,
+                                                          )),
+                                                  (route) => false);
+                                            },
                                             orderNum: snapshot.data!
                                                 .docs[index]['order_number']
                                                 .toString(),
-                                            vendorEmail: snapshot.data!.docs[index]
-                                                ['vendor_email'],
+                                            vendorEmail: snapshot.data!
+                                                .docs[index]['vendor_email'],
                                             time: snapshot.data!.docs[index]
                                                 ['time'],
                                             dineIn: snapshot.data!.docs[index]
@@ -78,8 +90,10 @@ class _OrderScreenState extends State<OrderScreen> {
                                                 ['image'],
                                             price: snapshot.data!.docs[index]
                                                 ['price'],
-                                            totalPrice: snapshot.data!.docs[index]['total_price'],
-                                            quantity: snapshot.data!.docs[index]['quantity'])));
+                                            totalPrice: snapshot.data!
+                                                .docs[index]['total_price'],
+                                            quantity: snapshot.data!.docs[index]
+                                                ['quantity'])));
                               },
                               child: ActivityComponent(
                                   orderNum: snapshot

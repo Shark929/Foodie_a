@@ -18,7 +18,9 @@ class SearchComponent extends StatelessWidget {
               shape: BoxShape.circle,
               image: DecorationImage(
                   image: NetworkImage(
-                    image,
+                    image != ""
+                        ? image
+                        : "https://i.picsum.photos/id/57/2448/3264.jpg?hmac=ewraXYesC6HuSEAJsg3Q80bXd1GyJTxekI05Xt9YjfQ",
                   ),
                   fit: BoxFit.fill),
             ),

@@ -7,7 +7,6 @@ import 'package:foodie/constants/color_constant.dart';
 import 'package:foodie/constants/text_constant.dart';
 import 'package:foodie/screens/choose_role_screen.dart';
 import 'package:foodie/screens/screens.dart';
-import 'package:foodie/screens/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -101,12 +100,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             InkWell(
                                 onTap: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const ChooseRoleScreen()),
-                                  );
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ChooseRoleScreen()),
+                                      (route) => false);
                                 },
                                 child: Text(
                                   "Sign Up",
@@ -122,12 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             );
           }
-          return SizedBox();
+          return const SizedBox();
         });
   }
 }
-
-
-
-              //=====
-

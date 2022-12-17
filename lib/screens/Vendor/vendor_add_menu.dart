@@ -132,6 +132,9 @@ class _VendorAddMenuState extends State<VendorAddMenu> {
             CustomButton(
                 buttonLabel: "Confirm",
                 buttonFunction: () {
+                  FirebaseFirestore.instance.collection("Category").add({
+                    "category_name": foodCategoryController.text,
+                  });
                   FirebaseFirestore.instance.collection("Restaurants").add({
                     "food_name": foodNameController.text,
                     "food_code": foodCodeController.text,
@@ -144,7 +147,6 @@ class _VendorAddMenuState extends State<VendorAddMenu> {
                     "mall": widget.mall,
                     "code": "1",
                   }).then((value) {
-                    print(value.id);
                     Navigator.pop(context);
                   }).catchError((err) => print("Failed to add new data"));
                 })

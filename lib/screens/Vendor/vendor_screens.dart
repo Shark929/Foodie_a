@@ -51,7 +51,9 @@ class _HomeScreenState extends State<VendorScreens> {
                             restaurantName: widget.restaurantName,
                             email: widget.email,
                           )
-                        : const OrderScreen(),
+                        : OrderScreen(
+                            email: widget.email,
+                          ),
 
             //snav bar go here
 

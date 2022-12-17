@@ -98,11 +98,12 @@ class _RegisterNewVendorScreenState extends State<RegisterNewVendorScreen> {
                       "email": userEmailController.text,
                       "password": passwordController.text,
                     }).then((value) {
-                      Navigator.push(
+                      Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  const VendorApprovalScreen()));
+                                  const VendorApprovalScreen()),
+                          (route) => false);
                     }).catchError((err) => print("Failed to add new data"));
                   },
                   buttonLabel: "Register"),
@@ -117,12 +118,12 @@ class _RegisterNewVendorScreenState extends State<RegisterNewVendorScreen> {
                     width: 8,
                   ),
                   InkWell(
-                      onTap: () async {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginScreen()),
-                        );
+                      onTap: () {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginScreen()),
+                            (route) => false);
                       },
                       child: Text(
                         "Sign In",

@@ -33,7 +33,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
               height: 30,
             ),
             Text(
-              "Menu",
+              "${widget.restaurant} Menu",
               style: CustomFont().pageLabel,
             ),
             const SizedBox(

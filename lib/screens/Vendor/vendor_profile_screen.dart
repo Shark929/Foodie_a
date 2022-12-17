@@ -23,6 +23,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
   CollectionReference orderRef = FirebaseFirestore.instance.collection("Order");
   double totalOrders = 0;
   int totalCustomer = 0;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -68,7 +69,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
                                       unitNum: widget.unitNum,
                                     )));
                       },
-                      child: Icon(Icons.more_vert)),
+                      child: const Icon(Icons.more_vert)),
                 ],
               ),
               const SizedBox(
@@ -84,8 +85,8 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
                         if (snapshot.data!.docs[i]['vendor_email'] ==
                             widget.email) {
                           if (snapshot.data!.docs[i]['code'] == "3") {
-                            totalRevenue +=
-                                double.parse(snapshot.data!.docs[i]['price']);
+                            totalRevenue += double.parse(
+                                snapshot.data!.docs[i]['total_price']);
                           }
                         }
                       }
@@ -115,6 +116,27 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
                     }
                     return const Text("No data shown");
                   }),
+              // StreamBuilder(
+              //     stream: FirebaseFirestore.instance
+              //         .collection("Withdrawal")
+              //         .snapshots(),
+              //     builder: (context, snapshot) {
+              //       if (snapshot.hasData) {
+              //         return ListView.builder(
+              //             itemCount: snapshot.data!.docs.length,
+              //             itemBuilder: (context, index) {
+              //               if (snapshot.data!.docs[index]['email'] ==
+              //                       widget.email &&
+              //                   snapshot.data!.docs[index]['balance'] ==
+              //                       "0.00") {
+              //                 snapshot.data!.docs[index].reference.update({
+              //                   "balance": totalRevenue,
+              //                 });
+              //               }
+              //             });
+              //       }
+              //       return const SizedBox();
+              //     }),
               const SizedBox(
                 height: 16,
               ),
@@ -149,7 +171,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
                           style: TextStyle(fontSize: 36),
                         );
                       }),
-                  SizedBox(
+                  const SizedBox(
                     width: 8,
                   ),
                   StreamBuilder(
@@ -174,7 +196,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
                           style: TextStyle(fontSize: 36),
                         );
                       }),
-                  SizedBox(
+                  const SizedBox(
                     width: 8,
                   ),
                   StreamBuilder(
