@@ -4,6 +4,7 @@ import 'package:foodie/components/search_component.dart';
 import 'package:foodie/components/trending_component.dart';
 import 'package:foodie/constants/text_constant.dart';
 import 'package:foodie/screens/location_screen.dart';
+import 'package:foodie/screens/menu_customization_screen.dart';
 import 'package:foodie/screens/user_order_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -26,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void searchFunction(String searchText) {}
   @override
   Widget build(BuildContext context) {
-    CollectionReference ref =
+    CollectionReference restaurantRef =
         FirebaseFirestore.instance.collection("Restaurants");
     CollectionReference cartRef =
         FirebaseFirestore.instance.collection(widget.userEmail);
@@ -100,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(
                               height: 250,
                               child: StreamBuilder<QuerySnapshot>(
-                                stream: ref.snapshots(),
+                                stream: restaurantRef.snapshots(),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
@@ -116,29 +117,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                         return TrendingComponent(
                                             onTap: () {
                                               Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      UserOrderScreen(
-                                                    restaurantName: snapshot
-                                                            .data!.docs[index]
-                                                        ['restaurant_name'],
-                                                    userName: widget.userEmail,
-                                                    mall: snapshot.data!
-                                                        .docs[index]['mall'],
-                                                    image: snapshot.data!
-                                                        .docs[index]['image'],
-                                                    foodName: snapshot
-                                                            .data!.docs[index]
-                                                        ['food_name'],
-                                                    price: snapshot.data!
-                                                        .docs[index]['price'],
-                                                    location: snapshot
-                                                            .data!.docs[index]
-                                                        ['location'],
-                                                  ),
-                                                ),
-                                              );
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) => MenuCustomizationScreen(
+                                                          food_code: snapshot.data!.docs[index]
+                                                              ['food_code'],
+                                                          food_name: snapshot
+                                                                  .data!
+                                                                  .docs[index]
+                                                              ['food_name'],
+                                                          food_category: snapshot
+                                                                  .data!
+                                                                  .docs[index]
+                                                              ['food_category'],
+                                                          vendorEmail: snapshot
+                                                                  .data!
+                                                                  .docs[index]
+                                                              ['email'],
+                                                          image: snapshot.data!
+                                                              .docs[index]['image'],
+                                                          price: snapshot.data!.docs[index]['price'],
+                                                          userEmail: widget.userEmail)));
                                             },
                                             title: snapshot.data!.docs[index]
                                                 ['food_name'],
@@ -163,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(
                               height: 250,
                               child: StreamBuilder<QuerySnapshot>(
-                                stream: ref.snapshots(),
+                                stream: restaurantRef.snapshots(),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {

@@ -108,11 +108,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     userEmail: userEmailController.text,
                                   )));
                     }).catchError((err) => print("Failed to add new data"));
-
-                    userNameController.clear();
-                    userEmailController.clear();
-                    phoneNumController.clear();
-                    passwordController.clear();
                   },
                   buttonLabel: "Register"),
               const SizedBox(

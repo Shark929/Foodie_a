@@ -54,7 +54,7 @@ class _RegisterNewVendorScreenState extends State<RegisterNewVendorScreen> {
               InputField(
                 obscureText: true,
                 controller: passwordController,
-                labelIcon: const Icon(Icons.store_mall_directory),
+                labelIcon: const Icon(Icons.key),
                 hintText: "Password",
               ),
               InputField(

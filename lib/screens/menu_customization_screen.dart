@@ -92,7 +92,8 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                       for (int i = 0; i < snapshotC.data!.docs.length; i++) {
                         if (snapshotC.data!.docs[i]['category_name'] ==
                             widget.food_category) {
-                          categoryCode = snapshotC.data!.docs[i]['category_id'];
+                          categoryCode =
+                              snapshotC.data!.docs[i]['category_name'];
                         }
                       }
                       return StreamBuilder(
@@ -163,8 +164,8 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                                                   ['type']),
                                             ],
                                           ));
-                                    }
-                                    return SizedBox();
+                                    } else {}
+                                    return const SizedBox();
                                   });
                             }
                             return const SizedBox();

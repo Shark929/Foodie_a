@@ -85,11 +85,6 @@ class _VendorLoginScreenState extends State<VendorLoginScreen> {
                                               email: snapshot.data!.docs[i]
                                                   ['email'])));
                                 }
-
-                                setState(() {
-                                  emailController.clear();
-                                  passwordController.clear();
-                                });
                               }
                             },
                             buttonLabel: "Login"),

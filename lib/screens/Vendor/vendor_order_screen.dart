@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:foodie/components/order_component.dart';
 import 'package:foodie/constants/text_constant.dart';
-import 'package:foodie/screens/Vendor/vendor_screens.dart';
 import 'package:foodie/screens/receipt_screen.dart';
 
 class OrderScreen extends StatefulWidget {

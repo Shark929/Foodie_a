@@ -111,7 +111,32 @@ class _VendorWalletScreenState extends State<VendorWalletScreen> {
                                         }
                                       }
                                     }
-                                    return const Text("No data shown");
+                                    return Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 100,
+                                      decoration: BoxDecoration(
+                                          color: CustomColor().logoColor,
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          const Text(
+                                            "Total Balance",
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          Text(
+                                            "RM ${balance.toStringAsFixed(2)}",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 24),
+                                          ),
+                                        ],
+                                      ),
+                                    );
                                   });
                             }
                           }
