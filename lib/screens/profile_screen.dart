@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:foodie/components/custom_button.dart';
 import 'package:foodie/components/details_component.dart';
+import 'package:foodie/components/promotion_component.dart';
 import 'package:foodie/constants/color_constant.dart';
 import 'package:foodie/constants/text_constant.dart';
 import 'package:foodie/screens/login_screen.dart';
@@ -22,6 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   CollectionReference vendorRef =
       FirebaseFirestore.instance.collection("Vendor");
   CollectionReference ref = FirebaseFirestore.instance.collection("Users");
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -86,16 +88,108 @@ class _ProfileScreenState extends State<ProfileScreen> {
               label: "Email",
               detail: widget.userEmail,
             ),
-            // DetailComponent(
-            //   label: "Phone",
-            //   detail: widget.phoneNum,
-            // ),
             const SizedBox(
               height: 16,
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height - 600,
+            Text(
+              "Promotion Code",
+              style: CustomFont().pageLabel,
             ),
+            const SizedBox(
+              height: 16,
+            ),
+            StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("UserPromotion")
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  List promoCode = [];
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const SizedBox();
+                  }
+                  if (snapshot.hasData) {
+                    for (int i = 0; i < snapshot.data!.docs.length; i++) {
+                      if (snapshot.data!.docs[i]['user_email'] ==
+                                  widget.userEmail &&
+                              promoCode.isEmpty ||
+                          promoCode.length < snapshot.data!.docs.length) {
+                        promoCode.add(snapshot.data!.docs[i]['promo_code']);
+                      }
+                    }
+
+                    return StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection("Promotion")
+                            .snapshots(),
+                        builder: (context, snapshot1) {
+                          if (snapshot1.hasData) {
+                            return ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: snapshot1.data!.docs.length,
+                                itemBuilder: (context, index) {
+                                  if (promoCode.length <
+                                      snapshot1.data!.docs.length) {
+                                    promoCode.add("");
+                                    for (int j = 0;
+                                        j < snapshot1.data!.docs.length;
+                                        j++) {
+                                      for (int k = 0;
+                                          k < snapshot1.data!.docs.length;
+                                          k++) {
+                                        if (promoCode[j] !=
+                                            snapshot1.data!.docs[k]
+                                                ['promotion_code']) {
+                                          return InkWell(
+                                            onTap: () {
+                                              FirebaseFirestore.instance
+                                                  .collection("UserPromotion")
+                                                  .add({
+                                                "amount":
+                                                    snapshot1.data!.docs[index]
+                                                        ['promo_amount'],
+                                                "code": "1",
+                                                "promotion_title":
+                                                    snapshot1.data!.docs[index]
+                                                        ['promotion_title'],
+                                                "user_email": widget.userEmail,
+                                                "promo_code":
+                                                    snapshot1.data!.docs[index]
+                                                        ['promotion_code'],
+                                              }).then((value) {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            UserWalletScreen(
+                                                                userEmail: widget
+                                                                    .userEmail)));
+                                              });
+                                            },
+                                            child: PromotionComponent(
+                                                amount:
+                                                    snapshot1.data!.docs[index]
+                                                        ['promo_amount'],
+                                                code:
+                                                    snapshot1.data!.docs[index]
+                                                        ['promotion_code'],
+                                                title:
+                                                    snapshot1.data!.docs[index]
+                                                        ['promotion_title']),
+                                          );
+                                        }
+                                      }
+                                    }
+                                  }
+
+                                  return const SizedBox();
+                                });
+                          }
+                          return const SizedBox();
+                        });
+                  }
+                  return const SizedBox();
+                }),
             CustomButton(
                 buttonLabel: "Logout",
                 buttonFunction: () {

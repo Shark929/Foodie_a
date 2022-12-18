@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:foodie/components/search_component.dart';
 import 'package:foodie/components/trending_component.dart';
+import 'package:foodie/constants/color_constant.dart';
 import 'package:foodie/constants/text_constant.dart';
+import 'package:foodie/screens/cuisine_page.dart';
 import 'package:foodie/screens/location_screen.dart';
 import 'package:foodie/screens/menu_customization_screen.dart';
 import 'package:foodie/screens/user_order_screen.dart';
@@ -89,6 +91,72 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(
+                              height: 8,
+                            ),
+                            StreamBuilder(
+                                stream: FirebaseFirestore.instance
+                                    .collection("Cuisine")
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const SizedBox();
+                                  }
+                                  if (snapshot.hasData) {
+                                    return Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8),
+                                      height: 40,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: ListView.builder(
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: snapshot.data!.docs.length,
+                                          itemBuilder: (context, index) {
+                                            return InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) => CuisinePage(
+                                                            userEmail: widget
+                                                                .userEmail,
+                                                            cuisine: snapshot
+                                                                    .data!
+                                                                    .docs[index]
+                                                                [
+                                                                'cuisine_name'])));
+                                              },
+                                              child: Container(
+                                                height: 30,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8),
+                                                margin: const EdgeInsets.only(
+                                                    right: 8),
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                    color: CustomColor()
+                                                        .buttonColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                child: Text(
+                                                  snapshot.data!.docs[index]
+                                                      ['cuisine_name'],
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                    );
+                                  }
+                                  return const SizedBox();
+                                }),
+                            const SizedBox(
                               height: 32,
                             ),
                             Text(
@@ -162,7 +230,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(
                               height: 250,
                               child: StreamBuilder<QuerySnapshot>(
-                                stream: restaurantRef.snapshots(),
+                                stream: FirebaseFirestore.instance
+                                    .collection("Location")
+                                    .snapshots(),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
@@ -175,13 +245,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                       scrollDirection: Axis.horizontal,
                                       itemCount: snapshot.data!.docs.length,
                                       itemBuilder: (context, index) {
-                                        return TrendingComponent(
-                                            title: snapshot.data!.docs[index]
-                                                ['food_name'],
-                                            location: snapshot.data!.docs[index]
-                                                ['location'],
-                                            image: snapshot.data!.docs[index]
-                                                ['image']);
+                                        return InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LocationScreen(
+                                                            location: snapshot
+                                                                    .data!
+                                                                    .docs[index]
+                                                                ['location'],
+                                                            image: snapshot
+                                                                    .data!
+                                                                    .docs[index]
+                                                                ['image'],
+                                                            userEmail: widget
+                                                                .userEmail)));
+                                          },
+                                          child: TrendingComponent(
+                                              title: snapshot.data!.docs[index]
+                                                  ['location'],
+                                              location: "",
+                                              image: snapshot.data!.docs[index]
+                                                  ['image']),
+                                        );
                                       },
                                     );
                                   }

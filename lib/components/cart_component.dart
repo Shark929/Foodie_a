@@ -29,9 +29,14 @@ class CartComponent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                foodName,
-                style: const TextStyle(fontWeight: FontWeight.w600),
+              SizedBox(
+                width: 80,
+                child: Text(
+                  foodName,
+                  style: const TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.w600),
+                ),
               ),
               const SizedBox(
                 height: 8,

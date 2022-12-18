@@ -1,11 +1,31 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:foodie/screens/views.dart';
-import 'dart:io' show Platform;
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    if (message.notification != null) {
+      print('Message also contained a notification: ${message.notification}');
+    }
+  });
+  print('User granted permission: ${settings.authorizationStatus}');
   runApp(const MyApp());
 }
 

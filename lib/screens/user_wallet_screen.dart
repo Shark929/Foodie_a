@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:foodie/components/custom_button.dart';
 import 'package:foodie/components/input_field.dart';
+import 'package:foodie/components/promotion_component.dart';
 import 'package:foodie/constants/color_constant.dart';
 import 'package:foodie/constants/text_constant.dart';
 import 'package:intl/intl.dart';
@@ -185,75 +186,145 @@ class _UserWalletScreenState extends State<UserWalletScreen> {
 
               //details here
             ),
+            const SizedBox(
+              height: 16,
+            ),
+            //Promotion Code here
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Promotion",
+                    style: CustomFont().pageLabel,
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection("UserPromotion")
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const SizedBox();
+                        }
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                if (snapshot.data!.docs[index]['user_email'] ==
+                                        widget.userEmail &&
+                                    snapshot.data!.docs[index]['code'] == "1") {
+                                  return InkWell(
+                                      onTap: () {
+                                        snapshot.data!.docs[index].reference
+                                            .update({"code": "2"});
+                                      },
+                                      child: PromotionComponent(
+                                          amount: snapshot.data!.docs[index]
+                                              ['amount'],
+                                          code: snapshot.data!.docs[index]
+                                              ['promo_code'],
+                                          title: snapshot.data!.docs[index]
+                                              ['promotion_title']));
+                                }
+                                return SizedBox();
+                              });
+                        }
+                        return const SizedBox();
+                      }),
+                ],
+              ),
+            ),
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
-              child: StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection("Transaction")
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: snapshot.data!.docs.length,
-                        itemBuilder: (context, index) {
-                          if (snapshot.data!.docs[index]['user_email'] ==
-                              widget.userEmail) {
-                            return Container(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: Row(children: [
-                                Image.asset(
-                                  snapshot.data!.docs[index]['payment_code'] ==
-                                          "1"
-                                      ? "assets/dish.png"
-                                      : "assets/top-up.png",
-                                  color: snapshot.data!.docs[index]
-                                              ['payment_code'] ==
-                                          "1"
-                                      ? Colors.green
-                                      : Colors.blue,
-                                  width: 40,
-                                  height: 40,
-                                ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                        " ${snapshot.data!.docs[index]['food_name']}"),
-                                    const SizedBox(
-                                      height: 4,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Transaction History",
+                    style: CustomFont().pageLabel,
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection("Transaction")
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              if (snapshot.data!.docs[index]['user_email'] ==
+                                  widget.userEmail) {
+                                return Container(
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: Row(children: [
+                                    Image.asset(
+                                      snapshot.data!.docs[index]
+                                                  ['payment_code'] ==
+                                              "1"
+                                          ? "assets/dish.png"
+                                          : "assets/top-up.png",
+                                      color: snapshot.data!.docs[index]
+                                                  ['payment_code'] ==
+                                              "1"
+                                          ? Colors.green
+                                          : Colors.blue,
+                                      width: 40,
+                                      height: 40,
                                     ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            " ${snapshot.data!.docs[index]['food_name']}"),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
+                                        Text(
+                                            " ${snapshot.data!.docs[index]['time']}"),
+                                      ],
+                                    ),
+                                    const Spacer(),
                                     Text(
-                                        " ${snapshot.data!.docs[index]['time']}"),
-                                  ],
-                                ),
-                                const Spacer(),
-                                Text(
-                                  "RM ${snapshot.data!.docs[index]['amount']}",
-                                  style: TextStyle(
-                                    color: snapshot.data!.docs[index]
-                                                ['payment_code'] ==
-                                            "1"
-                                        ? Colors.green
-                                        : Colors.blue,
-                                  ),
-                                ),
-                              ]),
-                            );
-                          }
-                          return const SizedBox();
-                        });
-                  }
-                  return const SizedBox();
-                },
+                                      "RM ${snapshot.data!.docs[index]['amount']}",
+                                      style: TextStyle(
+                                        color: snapshot.data!.docs[index]
+                                                    ['payment_code'] ==
+                                                "1"
+                                            ? Colors.green
+                                            : Colors.blue,
+                                      ),
+                                    ),
+                                  ]),
+                                );
+                              }
+                              return const SizedBox();
+                            });
+                      }
+                      return const SizedBox();
+                    },
+                  ),
+                ],
               ),
             )
           ]),

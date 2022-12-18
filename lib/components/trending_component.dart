@@ -21,7 +21,9 @@ class TrendingComponent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image.network(
-              image,
+              image != ""
+                  ? image
+                  : "https://i.picsum.photos/id/56/2880/1920.jpg?hmac=BIplhYgNZ9bsjPXYhD0xx6M1yPgmg4HtthKkCeJp6Fk",
               fit: BoxFit.fill,
               width: 250,
               height: 150,

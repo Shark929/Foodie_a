@@ -40,10 +40,15 @@ class MenuComponent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
-                      foodName,
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w600),
+                    SizedBox(
+                      width: 100,
+                      child: Text(
+                        foodName,
+                        style: const TextStyle(
+                            overflow: TextOverflow.ellipsis,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
                     ),
                     const SizedBox(
                       height: 8,

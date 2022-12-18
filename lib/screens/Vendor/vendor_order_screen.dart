@@ -69,6 +69,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       ReceiptScreen(
+                                                          cancel: false,
                                                           label: "Back",
                                                           buttonFunc: () {
                                                             Navigator.pop(
@@ -98,6 +99,64 @@ class _OrderScreenState extends State<OrderScreen> {
                                                           quantity: snapshot.data!.docs[index]['quantity'])));
                                         },
                                         child: OrderComponent(
+                                          foodName: snapshot.data!.docs[index]
+                                              ['food_name'],
+                                          dineIn: snapshot.data!.docs[index]
+                                              ['dine_in'],
+                                          orderNumber: snapshot
+                                              .data!.docs[index]['order_number']
+                                              .toString(),
+                                          price: snapshot.data!.docs[index]
+                                              ['total_price'],
+                                        ),
+                                      ));
+                                } else if (snapshot.data!.docs[index]['code'] ==
+                                        "4" &&
+                                    snapshot.data!.docs[index]
+                                            ['vendor_email'] ==
+                                        widget.email) {
+                                  return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16.0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ReceiptScreen(
+                                                      label: "Back",
+                                                      buttonFunc: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      cancel: true,
+                                                      orderNum: snapshot
+                                                          .data!
+                                                          .docs[index]
+                                                              ['order_number']
+                                                          .toString(),
+                                                      vendorEmail:
+                                                          snapshot.data!.docs[index]
+                                                              ['vendor_email'],
+                                                      time: snapshot.data!.docs[index]
+                                                          ['time'],
+                                                      dineIn: snapshot.data!.docs[index]
+                                                          ['dine_in'],
+                                                      foodName:
+                                                          snapshot.data!.docs[index]
+                                                              ['food_name'],
+                                                      email: snapshot.data!.docs[index]
+                                                          ['user_email'],
+                                                      image: snapshot.data!
+                                                          .docs[index]['image'],
+                                                      price: snapshot.data!.docs[index]['price'],
+                                                      totalPrice: snapshot.data!.docs[index]['total_price'],
+                                                      quantity: snapshot.data!.docs[index]['quantity']),
+                                            ),
+                                          );
+                                        },
+                                        child: OrderComponent(
+                                          cancel: true,
                                           foodName: snapshot.data!.docs[index]
                                               ['food_name'],
                                           dineIn: snapshot.data!.docs[index]

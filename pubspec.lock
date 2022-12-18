@@ -89,6 +89,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  device_info_plus:
+    dependency: "direct main"
+    description:
+      name: device_info_plus
+      sha256: "7ff671ed0a6356fa8f2e1ae7d3558d3fb7b6a41e24455e4f8df75b811fb8e4ab"
+      url: "https://pub.dev"
+    source: hosted
+    version: "8.0.0"
+  device_info_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: device_info_plus_platform_interface
+      sha256: d3b01d5868b50ae571cd1dc6e502fc94d956b665756180f7b16ead09e836fd64
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.0"
   fake_async:
     dependency: transitive
     description:
@@ -105,6 +121,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  file:
+    dependency: transitive
+    description:
+      name: file
+      sha256: "1b92bec4fc2a72f59a8e15af5f52cd441e4a7860b49499d69dfa817af20e925d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.4"
   file_picker:
     dependency: "direct main"
     description:
@@ -137,6 +161,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
+  firebase_messaging:
+    dependency: "direct main"
+    description:
+      name: firebase_messaging
+      sha256: "5299f2a702b958746941b47edb275272d4305e0fad99a4774b091346293d99c7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "14.1.4"
+  firebase_messaging_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_messaging_platform_interface
+      sha256: "7a8739ad1634767444329e7836249d9dbe3624597ec98dd2af8e1754062190e3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.8"
+  firebase_messaging_web:
+    dependency: transitive
+    description:
+      name: firebase_messaging_web
+      sha256: aeb9958a23efac1ac9035e55bc21c6a365c06d576396ed4dc0b974df790457a5
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.9"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -399,4 +447,4 @@ packages:
     version: "3.1.2"
 sdks:
   dart: ">=2.19.0-467.0.dev <4.0.0"
-  flutter: ">=2.10.0"
+  flutter: ">=2.11.0"

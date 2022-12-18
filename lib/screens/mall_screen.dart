@@ -16,10 +16,11 @@ class MallScreen extends StatefulWidget {
 }
 
 class _MallScreenState extends State<MallScreen> {
-  CollectionReference restaurantRef =
+  CollectionReference vendorRef =
       FirebaseFirestore.instance.collection("Vendor");
   @override
   Widget build(BuildContext context) {
+    print(widget.mall);
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
@@ -54,7 +55,7 @@ class _MallScreenState extends State<MallScreen> {
                 height: 16,
               ),
               StreamBuilder(
-                  stream: restaurantRef.snapshots(),
+                  stream: vendorRef.snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
