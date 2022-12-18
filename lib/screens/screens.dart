@@ -44,6 +44,7 @@ class _HomeScreenState extends State<Screens> {
                       )
                     : isProfile
                         ? ProfileScreen(
+                            isVendorView: false,
                             userEmail: widget.userEmail,
                           )
                         : CartScreen(

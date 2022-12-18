@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:foodie/constants/color_constant.dart';
 import 'package:foodie/constants/text_constant.dart';
@@ -8,6 +11,8 @@ import 'package:foodie/screens/screens.dart';
 import 'package:foodie/screens/user_wallet_screen.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:http/http.dart' as http;
 
 class PaymentScreen extends StatefulWidget {
   final String code,
@@ -46,6 +51,70 @@ class _PaymentScreenState extends State<PaymentScreen> {
   double replaceTotal = 0;
 
   DateTime now = DateTime.now();
+
+  //for  messaging
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  String mToken = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getToken();
+  }
+
+  //get device token
+  void getToken() async {
+    await FirebaseMessaging.instance.getToken().then((token) {
+      setState(() {
+        mToken = token!;
+        print("my token is $mToken");
+      });
+      saveToken(mToken);
+    });
+  }
+
+  void saveToken(String token) async {
+    await FirebaseFirestore.instance.collection("UserToken").doc().set({
+      'token': token,
+    });
+  }
+
+  void sendPushMessage(
+      {required String token,
+      required String title,
+      required String body}) async {
+    try {
+      await http.post(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization':
+              'key=AAAAHgpjrMM:APA91bFg45AqVXWSC_zUFAZT7Joa4tLYow3eIIWGxFvHxEnk_8CbMyfG3_7F43xV8ZfR0LMnnynZGH6RXzVhzeTE2uga-pxunI7DUO3Ap-HP1HHeAuP177Pi6AQoe3YMdGG8KPi1ktqu'
+        },
+        body: jsonEncode(<String, dynamic>{
+          'priority': 'high',
+          'data': <String, dynamic>{
+            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+            'status': 'done',
+            'body': body,
+            'title': title,
+          },
+          "notification": <String, dynamic>{
+            "title": title,
+            "body": body,
+            "android_channel_id": "Foodie",
+          },
+          "to": token,
+        }),
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print("error push notifiction");
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -206,6 +275,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               onTap: () async {
                                 if (double.parse(myBalance) >
                                     double.parse(widget.totalPrice)) {
+                                  DocumentSnapshot snap =
+                                      await FirebaseFirestore.instance
+                                          .collection("UserToken")
+                                          .doc("X3w7BwwchMUPC9yOZV9I")
+                                          .get();
+
+                                  String token = snap['token'];
+                                  print(token);
+                                  sendPushMessage(
+                                      title: widget.foodName,
+                                      body: widget.quantity,
+                                      token: token);
                                   double newBalance =
                                       double.parse(myBalance) - replaceTotal;
 
@@ -254,8 +335,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     "quantity": widget.quantity,
                                     "total_price": widget.totalPrice,
                                   }).then((value) {
-                                    //send a notification to the seller
-
                                     Navigator.pushAndRemoveUntil(
                                         context,
                                         MaterialPageRoute(

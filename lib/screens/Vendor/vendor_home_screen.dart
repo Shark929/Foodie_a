@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:foodie/constants/text_constant.dart';
+import 'package:foodie/screens/Vendor/user_detail_screen.dart';
+import 'package:foodie/screens/profile_screen.dart';
 
 class VendorHomeScreen extends StatefulWidget {
   final String email;
@@ -207,122 +209,148 @@ class _VendorHomeScreenState extends State<VendorHomeScreen> {
                                           widget.email &&
                                       orderSnapshot.data!.docs[index]['code'] !=
                                           "3") {
-                                    return Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8),
-                                      child: Row(children: [
-                                        Container(
-                                          height: 80,
-                                          width: 100,
-                                          margin:
-                                              const EdgeInsets.only(bottom: 8),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            image: DecorationImage(
-                                                image: NetworkImage(
-                                                    orderSnapshot.data!
-                                                        .docs[index]['image']),
-                                                fit: BoxFit.fill),
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UserDetailScreen(
+                                                      userEmail: orderSnapshot
+                                                              .data!.docs[index]
+                                                          ['user_email'],
+                                                      foodName: orderSnapshot
+                                                              .data!.docs[index]
+                                                          ['food_name'],
+                                                      foodQuantity:
+                                                          orderSnapshot.data!
+                                                                  .docs[index]
+                                                              ['quantity'],
+                                                    )));
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                        child: Row(children: [
+                                          Container(
+                                            height: 80,
+                                            width: 100,
+                                            margin: const EdgeInsets.only(
+                                                bottom: 8),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              image: DecorationImage(
+                                                  image: NetworkImage(
+                                                      orderSnapshot
+                                                              .data!.docs[index]
+                                                          ['image']),
+                                                  fit: BoxFit.fill),
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(
-                                          width: 16,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(
-                                              width: 80,
-                                              child: Text(
-                                                orderSnapshot.data!.docs[index]
-                                                    ['food_name'],
-                                                style: const TextStyle(
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.w600),
+                                          const SizedBox(
+                                            width: 16,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                width: 80,
+                                                child: Text(
+                                                  orderSnapshot.data!
+                                                      .docs[index]['food_name'],
+                                                  style: const TextStyle(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(
-                                              height: 30,
-                                            ),
-                                            Text(
-                                                "# ${orderSnapshot.data!.docs[index]['order_number']}"),
-                                          ],
-                                        ),
-                                        const Spacer(),
-                                        orderSnapshot.data!.docs[index]
-                                                    ['code'] ==
-                                                "1"
-                                            ? InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    orderSnapshot.data!
-                                                        .docs[index].reference
-                                                        .update({"code": "2"});
-                                                  });
-                                                },
-                                                child: Container(
-                                                    width: 100,
-                                                    alignment: Alignment.center,
-                                                    height: 30,
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.red,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8)),
-                                                    child: const Text("New")),
-                                              )
-                                            : orderSnapshot.data!.docs[index]
-                                                        ['code'] ==
-                                                    "2"
-                                                ? InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        orderSnapshot
-                                                            .data!
-                                                            .docs[index]
-                                                            .reference
-                                                            .update(
-                                                                {"code": "3"});
-                                                      });
-                                                    },
-                                                    child: Container(
-                                                        width: 100,
-                                                        alignment:
-                                                            Alignment.center,
-                                                        height: 30,
-                                                        decoration: BoxDecoration(
-                                                            color: Colors.blue,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8)),
-                                                        child: const Text(
-                                                            "Active")),
-                                                  )
-                                                : InkWell(
-                                                    onTap: () {
-                                                      setState(() {});
-                                                    },
-                                                    child: Container(
-                                                        width: 100,
-                                                        alignment:
-                                                            Alignment.center,
-                                                        height: 30,
-                                                        decoration: BoxDecoration(
-                                                            color: Colors.green,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8)),
-                                                        child: const Text(
-                                                            "Completed")),
-                                                  )
-                                      ]),
+                                              const SizedBox(
+                                                height: 30,
+                                              ),
+                                              Text(
+                                                  "# ${orderSnapshot.data!.docs[index]['order_number']}"),
+                                            ],
+                                          ),
+                                          const Spacer(),
+                                          orderSnapshot.data!.docs[index]
+                                                      ['code'] ==
+                                                  "1"
+                                              ? InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      orderSnapshot.data!
+                                                          .docs[index].reference
+                                                          .update(
+                                                              {"code": "2"});
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                      width: 100,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.red,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8)),
+                                                      child: const Text("New")),
+                                                )
+                                              : orderSnapshot.data!.docs[index]
+                                                          ['code'] ==
+                                                      "2"
+                                                  ? InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          orderSnapshot
+                                                              .data!
+                                                              .docs[index]
+                                                              .reference
+                                                              .update({
+                                                            "code": "3"
+                                                          });
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                          width: 100,
+                                                          alignment:
+                                                              Alignment.center,
+                                                          height: 30,
+                                                          decoration: BoxDecoration(
+                                                              color:
+                                                                  Colors.blue,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8)),
+                                                          child: const Text(
+                                                              "Active")),
+                                                    )
+                                                  : InkWell(
+                                                      onTap: () {
+                                                        setState(() {});
+                                                      },
+                                                      child: Container(
+                                                          width: 100,
+                                                          alignment:
+                                                              Alignment.center,
+                                                          height: 30,
+                                                          decoration: BoxDecoration(
+                                                              color:
+                                                                  Colors.green,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8)),
+                                                          child: const Text(
+                                                              "Completed")),
+                                                    )
+                                        ]),
+                                      ),
                                     );
                                   }
                                 }

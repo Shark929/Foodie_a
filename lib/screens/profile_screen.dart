@@ -9,10 +9,12 @@ import 'package:foodie/screens/login_screen.dart';
 import 'package:foodie/screens/user_wallet_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final userEmail;
+  final String userEmail;
+  final bool isVendorView;
   const ProfileScreen({
     super.key,
     required this.userEmail,
+    required this.isVendorView,
   });
 
   @override
@@ -57,21 +59,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
                 const Spacer(),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => UserWalletScreen(
-                                  userEmail: widget.userEmail,
-                                )));
-                  },
-                  child: Image.asset(
-                    "assets/wallet.png",
-                    width: 30,
-                    height: 30,
-                  ),
-                )
+                widget.isVendorView == true
+                    ? const SizedBox()
+                    : InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UserWalletScreen(
+                                        userEmail: widget.userEmail,
+                                      )));
+                        },
+                        child: Image.asset(
+                          "assets/wallet.png",
+                          width: 30,
+                          height: 30,
+                        ),
+                      )
               ],
             ),
             const SizedBox(
@@ -91,111 +95,142 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(
               height: 16,
             ),
-            Text(
-              "Promotion Code",
-              style: CustomFont().pageLabel,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
             StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection("UserPromotion")
-                    .snapshots(),
+                stream:
+                    FirebaseFirestore.instance.collection("Users").snapshots(),
                 builder: (context, snapshot) {
-                  List promoCode = [];
-
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const SizedBox();
-                  }
                   if (snapshot.hasData) {
                     for (int i = 0; i < snapshot.data!.docs.length; i++) {
                       if (snapshot.data!.docs[i]['user_email'] ==
-                                  widget.userEmail &&
-                              promoCode.isEmpty ||
-                          promoCode.length < snapshot.data!.docs.length) {
-                        promoCode.add(snapshot.data!.docs[i]['promo_code']);
+                          widget.userEmail) {
+                        return DetailComponent(
+                          label: "Phone: ",
+                          detail: snapshot.data!.docs[i]['phone_number'],
+                        );
                       }
                     }
-
-                    return StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection("Promotion")
-                            .snapshots(),
-                        builder: (context, snapshot1) {
-                          if (snapshot1.hasData) {
-                            return ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: snapshot1.data!.docs.length,
-                                itemBuilder: (context, index) {
-                                  if (promoCode.length <
-                                      snapshot1.data!.docs.length) {
-                                    promoCode.add("");
-                                    for (int j = 0;
-                                        j < snapshot1.data!.docs.length;
-                                        j++) {
-                                      for (int k = 0;
-                                          k < snapshot1.data!.docs.length;
-                                          k++) {
-                                        if (promoCode[j] !=
-                                            snapshot1.data!.docs[k]
-                                                ['promotion_code']) {
-                                          return InkWell(
-                                            onTap: () {
-                                              FirebaseFirestore.instance
-                                                  .collection("UserPromotion")
-                                                  .add({
-                                                "amount":
-                                                    snapshot1.data!.docs[index]
-                                                        ['promo_amount'],
-                                                "code": "1",
-                                                "promotion_title":
-                                                    snapshot1.data!.docs[index]
-                                                        ['promotion_title'],
-                                                "user_email": widget.userEmail,
-                                                "promo_code":
-                                                    snapshot1.data!.docs[index]
-                                                        ['promotion_code'],
-                                              }).then((value) {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            UserWalletScreen(
-                                                                userEmail: widget
-                                                                    .userEmail)));
-                                              });
-                                            },
-                                            child: PromotionComponent(
-                                                amount:
-                                                    snapshot1.data!.docs[index]
-                                                        ['promo_amount'],
-                                                code:
-                                                    snapshot1.data!.docs[index]
-                                                        ['promotion_code'],
-                                                title:
-                                                    snapshot1.data!.docs[index]
-                                                        ['promotion_title']),
-                                          );
-                                        }
-                                      }
-                                    }
-                                  }
-
-                                  return const SizedBox();
-                                });
-                          }
-                          return const SizedBox();
-                        });
                   }
                   return const SizedBox();
                 }),
-            CustomButton(
-                buttonLabel: "Logout",
-                buttonFunction: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()));
-                }),
+            const SizedBox(
+              height: 16,
+            ),
+            widget.isVendorView == true
+                ? const SizedBox()
+                : Text(
+                    "Promotion Code",
+                    style: CustomFont().pageLabel,
+                  ),
+            const SizedBox(
+              height: 16,
+            ),
+            widget.isVendorView == true
+                ? const SizedBox()
+                : StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection("UserPromotion")
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      List promoCode = [];
+
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const SizedBox();
+                      }
+                      if (snapshot.hasData) {
+                        for (int i = 0; i < snapshot.data!.docs.length; i++) {
+                          if (snapshot.data!.docs[i]['user_email'] ==
+                                      widget.userEmail &&
+                                  promoCode.isEmpty ||
+                              promoCode.length < snapshot.data!.docs.length) {
+                            promoCode.add(snapshot.data!.docs[i]['promo_code']);
+                          }
+                        }
+
+                        return StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection("Promotion")
+                                .snapshots(),
+                            builder: (context, snapshot1) {
+                              if (snapshot1.hasData) {
+                                return ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: snapshot1.data!.docs.length,
+                                    itemBuilder: (context, index) {
+                                      if (promoCode.length <
+                                          snapshot1.data!.docs.length) {
+                                        promoCode.add("");
+                                        for (int j = 0;
+                                            j < snapshot1.data!.docs.length;
+                                            j++) {
+                                          for (int k = 0;
+                                              k < snapshot1.data!.docs.length;
+                                              k++) {
+                                            if (promoCode[j] !=
+                                                snapshot1.data!.docs[k]
+                                                    ['promotion_code']) {
+                                              return InkWell(
+                                                onTap: () {
+                                                  FirebaseFirestore.instance
+                                                      .collection(
+                                                          "UserPromotion")
+                                                      .add({
+                                                    "amount": snapshot1
+                                                            .data!.docs[index]
+                                                        ['promo_amount'],
+                                                    "code": "1",
+                                                    "promotion_title": snapshot1
+                                                            .data!.docs[index]
+                                                        ['promotion_title'],
+                                                    "user_email":
+                                                        widget.userEmail,
+                                                    "promo_code": snapshot1
+                                                            .data!.docs[index]
+                                                        ['promotion_code'],
+                                                  }).then((value) {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                UserWalletScreen(
+                                                                    userEmail:
+                                                                        widget
+                                                                            .userEmail)));
+                                                  });
+                                                },
+                                                child: PromotionComponent(
+                                                    amount: snapshot1
+                                                            .data!.docs[index]
+                                                        ['promo_amount'],
+                                                    code: snapshot1
+                                                            .data!.docs[index]
+                                                        ['promotion_code'],
+                                                    title: snapshot1
+                                                            .data!.docs[index]
+                                                        ['promotion_title']),
+                                              );
+                                            }
+                                          }
+                                        }
+                                      }
+
+                                      return const SizedBox();
+                                    });
+                              }
+                              return const SizedBox();
+                            });
+                      }
+                      return const SizedBox();
+                    }),
+            widget.isVendorView == true
+                ? const SizedBox()
+                : CustomButton(
+                    buttonLabel: "Logout",
+                    buttonFunction: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginScreen()));
+                    }),
           ],
         ),
       )),
